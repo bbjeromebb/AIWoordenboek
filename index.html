@@ -3,16 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AI-woordenschat Leiedal</title>
+<title>AI-basisopleiding Leiedal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: werkmap met opdrachtfiches - smalle leeskolom, sticky tabnavigatie, oefeningen als "fiches" met stippellijn-rand */
 :root{
   --bg:#f3f6f5; --surface:#ffffff; --ink:#15201d; --muted:#55645f; --line:#d3ddd9;
   --accent:#1d6b57; --accent-ink:#ffffff; --accent-soft:#dcebe4; --marker:#f4d35e;
-  --ok:#2c7a4b; --ok-soft:#ddf0e3; --bad:#b3261e; --bad-soft:#f9e0de;
   --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",Consolas,monospace;
@@ -20,275 +18,77 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0f1614; --surface:#17211e; --ink:#e4ede9; --muted:#9bada6; --line:#2b3a35;
-  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420;
-  --ok:#72d19a; --ok-soft:#173826; --bad:#f28b82; --bad-soft:#3d1c1a; color-scheme:dark}}
+  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f1614; --surface:#17211e; --ink:#e4ede9; --muted:#9bada6; --line:#2b3a35;
-  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420;
-  --ok:#72d19a; --ok-soft:#173826; --bad:#f28b82; --bad-soft:#3d1c1a; color-scheme:dark}
+  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420; color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body)}
-.wrap{max-width:860px;margin:0 auto;padding-inline:16px}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  display:flex;flex-direction:column;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;width:100%}
 h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
 h1{font-size:clamp(2rem,5vw,3rem);font-weight:700}
-h2{font-size:1.75rem;font-weight:700}
-h3{font-size:1.15rem;font-weight:700}
+h2{font-size:1.5rem;font-weight:700}
 p{margin:0}
 .lead{font-size:1.1rem;color:var(--muted);max-width:62ch}
 .eyebrow{font:500 .75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 mark{background:var(--marker);color:inherit;padding:0 .15em}
-code,.mono{font-family:var(--f-mono);font-size:.9em}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-/* nav */
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
-nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-size:.9rem;padding:6px 10px;border-radius:999px;white-space:nowrap}
-nav.tabs a:hover{color:var(--ink);background:var(--accent-soft)}
-
-header.hero{padding-block:48px 32px}
+header.hero{padding-block:64px 32px}
 header.hero .wrap{display:grid;gap:16px}
-.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
-.rule{border-left:3px solid var(--accent);padding:4px 0 4px 12px}
-.rule b{display:block;font-family:var(--f-display);font-size:1.05rem}
-.rule span{color:var(--muted);font-size:.95rem}
 
-section{padding-block:40px;border-top:1px solid var(--line)}
-section > .wrap{display:grid;gap:18px}
-.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.two > *{min-width:0}
+main{flex:1;border-top:1px solid var(--line);padding-block:40px}
+main .wrap{display:grid;gap:18px}
 
-/* timeline */
-.timeline{display:grid;gap:0;border-left:2px solid var(--line);margin-left:6px}
-.tl{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:10px 0 10px 16px;position:relative}
-.tl::before{content:"";position:absolute;left:-7px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
-.tl .t{font:500 .85rem var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums;padding-top:2px}
-.tl .d b{display:block}
-.tl .d span{color:var(--muted);font-size:.93rem}
-.tag{display:inline-block;font:500 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-left:6px;vertical-align:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.cards > *{min-width:0}
+.fiche{display:grid;gap:10px;align-content:start;text-decoration:none;color:inherit;
+  border:2px dashed var(--accent);border-radius:14px;padding:22px;background:var(--surface);
+  transition:background .2s,transform .2s}
+.fiche:hover{background:var(--accent-soft)}
+.fiche p{color:var(--muted);font-size:.97rem}
+.fiche .go{font:500 .85rem var(--f-mono);color:var(--accent);margin-top:6px}
+.fiche .go::after{content:" \2192"}
+@media (prefers-reduced-motion: reduce){.fiche{transition:none}}
 
-/* table */
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font:500 .75rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-tr:last-child td{border-bottom:0}
-
-.note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
-.note h3{margin-bottom:6px}
-.note ul{margin:6px 0 0;padding-left:20px}
-.warn{border-color:var(--bad);background:var(--bad-soft)}
-
-/* woordenschat */
-.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
-.flip{all:unset;box-sizing:border-box;display:grid;cursor:pointer;perspective:900px;border-radius:var(--r);min-width:0}
-.flip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.flip .inner{display:grid;height:100%;transition:transform .5s ease;transform-style:preserve-3d;min-height:200px}
-.flip .face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);border:1px solid var(--line);padding:14px;display:grid;gap:6px}
-.flip .front{background:var(--surface);align-content:center;justify-items:center;text-align:center}
-.flip .front .ttl{font:700 1.25rem/1.15 var(--f-display);text-wrap:balance}
-.flip .front .en{font:400 .8rem var(--f-mono);color:var(--muted)}
-.flip .face{position:relative}
-.flip .ico{position:absolute;right:10px;bottom:10px;width:16px;height:16px;color:var(--muted);opacity:.55;transition:opacity .2s,color .2s}
-.flip:hover .ico,.flip:focus-visible .ico{opacity:1;color:var(--accent)}
-.flip .back{padding-bottom:30px}
-.flip .back{background:var(--accent-soft);transform:rotateY(180deg);align-content:start}
-.flip .back b{font-family:var(--f-display);font-size:1rem}
-.flip .back .def{font-size:.85rem;line-height:1.5}
-.flip .back .ana{font-size:.82rem;line-height:1.5;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
-.flip .back .ana::before{content:"Delegeren: ";font-weight:600;color:var(--accent)}
-.flip.flipped .inner{transform:rotateY(180deg)}
-@media (hover:hover){.flip:hover .front{border-color:var(--accent)}}
-@media (prefers-reduced-motion: reduce){
-  .flip .inner{transition:none}
-}
-
-/* fiche (oefening) */
-.fiche{border:2px dashed var(--accent);border-radius:14px;padding:18px;background:var(--surface);display:grid;gap:14px}
-.fiche > header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px}
-.fiche .dur{font:500 .8rem var(--f-mono);color:var(--muted)}
-.q{display:grid;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
-.q:first-of-type{border-top:0}
-.q p{font-weight:500}
-.opts{display:flex;flex-wrap:wrap;gap:6px}
-button,.btn{font:500 .9rem var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-button.is-ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
-button.is-bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
-.fb{font-size:.92rem;color:var(--muted)}
-.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
-.score{font:500 .9rem var(--f-mono)}
-
-/* tools */
-.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
-.tool{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:8px;align-content:start}
-.tool .kind{font:500 .72rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.tool dl{margin:0;display:grid;gap:4px;font-size:.92rem}
-.tool dt{font-weight:600}
-.tool dd{margin:0 0 4px;color:var(--muted)}
-.pill{display:inline-block;font:500 .72rem var(--f-mono);padding:2px 8px;border-radius:999px}
-.pill.green{background:var(--ok-soft);color:var(--ok)}
-.pill.red{background:var(--bad-soft);color:var(--bad)}
-
-/* builder */
-.builder{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.builder > *{min-width:0}
-.field{display:grid;gap:4px}
-.field label{font-weight:600;font-size:.92rem}
-.field small{color:var(--muted);font-size:.82rem}
-textarea,input[type=text]{width:100%;font:400 .93rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
-.out{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font:400 .88rem/1.55 var(--f-mono);white-space:pre-wrap;word-break:break-word;min-height:200px}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
-.compare > div{min-width:0;border-radius:var(--r);padding:12px;border:1px solid var(--line);background:var(--surface)}
-.compare .weak{border-color:var(--bad)}
-.compare .strong{border-color:var(--ok)}
-.compare pre{margin:6px 0 0;white-space:pre-wrap;font:400 .86rem/1.5 var(--f-mono)}
-
-/* spot de fout */
-.source{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:.93rem}
-.sents{display:grid;gap:6px}
-.sent{text-align:left;width:100%;background:var(--bg);font-weight:400;line-height:1.45}
-.sent.sel{border-color:var(--marker);box-shadow:inset 4px 0 0 var(--marker)}
-.sent.ok-right{background:var(--ok-soft);border-color:var(--ok)}
-.sent.bad-right{background:var(--bad-soft);border-color:var(--bad)}
-.sent .why{display:block;font-size:.85rem;color:var(--muted);margin-top:4px}
-
-.checklist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
-.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-.checklist input{margin-top:5px;accent-color:var(--accent)}
-
-details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
-details + details{margin-top:8px}
-summary{cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
-details[open] summary{margin-bottom:10px}
-details ul,details ol{padding-left:20px;margin:6px 0}
-details li{margin-bottom:4px}
-/* matrix */
-.matrix{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto auto auto;gap:6px}
-.matrix .ax{font:500 .72rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.matrix .ax-y{grid-row:1/3;grid-column:1;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
-.matrix .ax-x{grid-column:2/4;text-align:center}
-.matrix .cell{border-radius:var(--r);padding:12px;display:grid;gap:2px;min-width:0;border:1px solid var(--line)}
-.matrix .cell b{font-family:var(--f-display)}
-.matrix .cell span{font-size:.82rem;color:var(--muted)}
-.c-a{background:var(--ok-soft)} .c-b{background:var(--accent-soft)} .c-c{background:var(--surface)} .c-d{background:var(--bad-soft)}
-.sortitem{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
-.sortitem:first-child{border-top:0}
-.steps{margin:0;padding-left:20px;display:grid;gap:10px}
-.prompt{display:grid;gap:6px;margin-top:6px}
-.prompt pre{margin:0;white-space:pre-wrap;word-break:break-word;font:400 .86rem/1.5 var(--f-mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
-.prompt button{justify-self:start}
-.trap{font-size:.93rem;border-left:3px solid var(--marker);padding-left:10px}
-#notes{white-space:pre-wrap}
-.reacties{margin:0;padding-left:24px;display:grid;gap:4px;font-size:.93rem}
-footer{padding-block:32px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
-@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
-html{scroll-behavior:smooth}
-section{scroll-margin-top:56px}
+footer{border-top:1px solid var(--line);padding-block:20px;color:var(--muted);font-size:.85rem}
 </style>
-<style>:root{color-scheme:light} body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
 </head>
 <body>
+
 <header class="hero">
   <div class="wrap">
-    <span class="eyebrow">AI basisopleiding Leiedal · woordenschat</span>
-    <h1>Twintig begrippen om <mark>samen</mark> over AI te praten</h1>
-    <p class="lead">Werken met AI is delegeren. Elk begrip krijgt daarom naast een korte uitleg ook een vergelijking met het doorgeven van werk aan een collega.</p>
+    <span class="eyebrow">Leiedal · AI-basisopleiding</span>
+    <h1>AI in je <mark>dagelijkse werk</mark></h1>
+    <p class="lead">Kies waar je mee wilt starten.</p>
   </div>
 </header>
 
-<section id="woorden" style="border-top:0">
+<main>
   <div class="wrap">
-    <span class="eyebrow">Gemeenschappelijke taal</span>
-    <h2>Twintig begrippen</h2>
-    <div class="row"><p class="fb">Raad eerst zelf wat een begrip betekent. Klik op een kaart voor de uitleg.</p><button type="button" id="flipall">Draai alle kaarten om</button></div>
-    <div class="terms" id="terms"></div>
-
-    <div class="fiche" id="quiz1">
-      <header><h3>Quiz: welk begrip hoort bij de situatie?</h3><span class="dur">individueel · 3 min</span><span class="score" id="q1score"></span></header>
-      <div id="q1"></div>
+    <div class="cards">
+      <a class="fiche" href="ai-basisopleiding-woordenschat.html">
+        <span class="eyebrow">Woordenschat</span>
+        <h2>AI-woordenboek</h2>
+        <p>De belangrijkste begrippen uitgelegd met kaartjes, analogieën en een korte oefening.</p>
+        <span class="go">Open het woordenboek</span>
+      </a>
+      <a class="fiche" href="ai-basisopleiding-praktisch-gebruik.html">
+        <span class="eyebrow">Oefening</span>
+        <h2>Delegeer je taak</h2>
+        <p>Leer een taak zo duidelijk overdragen aan AI dat het resultaat bruikbaar is.</p>
+        <span class="go">Start de oefening</span>
+      </a>
     </div>
   </div>
-</section>
+</main>
 
+<footer><div class="wrap">AI basisopleiding Leiedal · stand oktober 2026</div></footer>
 
-<footer><div class="wrap">AI basisopleiding Leiedal · woordenschat · stand oktober 2026. Hoort bij <a href="https://claude.ai/artifact/N4GGDG8qbEXjCHzwffEvb4" target="_blank" rel="noopener">sessie 1</a>.</div></footer>
-
-<script>
-(function(){
-  /* ---------- woordenschat ---------- */
-  const TERMS = [
-    ["Model", "model, LLM", "Het AI-systeem dat antwoordt. Elke tool gebruikt één of meer modellen, met eigen sterktes en een kennisdatum.", "De medewerker aan wie je delegeert: de ene een snelle generalist, de andere een grondige denker."],
-    ["Prompt", "prompt", "De opdracht of vraag die je aan de AI geeft.", "De briefing. Een vage briefing geeft een vaag resultaat."],
-    ["Context", "context", "Alle informatie die de AI bij het antwoorden ziet: je vraag, eerdere berichten in het gesprek en wat je meegeeft.", "Het dossier dat je op tafel legt. Wat er niet in zit, weet de medewerker niet."],
-    ["Contextvenster", "context window", "De hoeveelheid tekst die de AI tegelijk kan meenemen. In een heel lang gesprek raakt het begin uit beeld.", "Hoeveel papier past er op het bureau? Bij een overvol bureau begin je beter een nieuwe map."],
-    ["Gesprek", "chat, sessie", "Eén doorlopende conversatie. Een nieuwe chat begint zonder de info uit vorige gesprekken, tenzij geheugen aan staat.", "Eén werkoverleg. Een nieuwe chat is een nieuwe medewerker die van niets weet."],
-    ["Thinking mode", "redeneermodus, reasoning", "De AI denkt eerst in stappen na voor het antwoordt. Trager, maar beter bij analyse, rekenwerk en complexe vragen.", "\"Neem je tijd en denk het goed door.\" Niet nodig voor een korte mail."],
-    ["Hallucinatie", "hallucination", "Een antwoord dat overtuigend klinkt maar verzonnen of fout is: een niet-bestaande bron, een fout cijfer.", "De medewerker die liever iets invult dan toe te geven dat hij het niet weet."],
-    ["Webzoeken en bronnen", "web search, grounding", "De AI zoekt actuele informatie op en toont waar die vandaan komt.", "Opzoeken in plaats van uit het hoofd antwoorden. Controleer wel of de bron zegt wat de AI beweert."],
-    ["Multimodaal", "multimodal", "De AI werkt ook met beelden, pdf's, plannen, audio, niet enkel met tekst.", "De medewerker die ook een plan, foto of schets kan lezen."],
-    ["Markdown", "opmaaktaal, .md", "Een eenvoudige opmaak met tekens: # voor een titel, ** voor vet, - voor een opsomming. AI schrijft en leest het vlot. Daarom zie je soms sterretjes en hekjes als je een antwoord in Word plakt.", "De afgesproken sjabloonstijl: eenvoudige regels voor structuur die iedereen begrijpt. Plak je in Word, vraag dan om tekst zonder opmaaktekens of gebruik de kopieerknop."],
-    ["Vaste instructies", "systeeminstructies, custom instructions", "Instructies die bij elk gesprek gelden, bv. taal, toon of rol. Je stelt ze één keer in.", "De functieomschrijving en de werkafspraken, die je niet elke keer opnieuw uitlegt."],
-    ["Project", "projectruimte, workspace", "Een werkruimte in de tool waarin je gesprekken, documenten en vaste instructies rond één onderwerp bundelt. Elk nieuw gesprek in het project start met die achtergrond.", "Het projectdossier dat de medewerker bij elke nieuwe opdracht opnieuw openslaat."],
-    ["Geheugen", "memory", "Sommige tools onthouden info over jou tussen gesprekken. Je kan dit meestal bekijken en uitzetten.", "Wat de medewerker na een tijdje over jou en je voorkeuren weet."],
-    ["Skill", "vaardigheid, werkinstructie", "Een herbruikbaar pakket instructies, soms met voorbeelden of sjablonen, voor één soort taak. De AI haalt het op wanneer die taak zich voordoet, bv. een nota voor de raad van bestuur opmaken.", "Het draaiboek of de werkinstructie van de dienst: één keer goed uitgeschreven, elke keer opnieuw gevolgd."],
-    ["Tool calling", "tool use, function calling", "De AI kiest en gebruikt zelf een hulpmiddel, bv. webzoeken, rekenen of een bestand lezen, en verwerkt het resultaat in het antwoord.", "De medewerker die zelf de rekenmachine of het archief erbij neemt, in plaats van uit het hoofd te antwoorden."],
-    ["Capabilities", "mogelijkheden, functies", "Wat een tool kan naast tekst schrijven: webzoeken, bestanden maken, code uitvoeren, beelden genereren, connectors gebruiken. Dat verschilt per tool en per abonnement.", "Het takenpakket en de bevoegdheden van de medewerker: wat kan en mag hij?"],
-    ["Connector", "integratie, koppeling, MCP", "Een koppeling tussen de AI-tool en een andere toepassing, bv. mailbox, agenda, SharePoint of een projectplatform. Pas met een connector kan de AI daar gegevens lezen of iets aanpassen.", "De toegangsbadge en de sleutels die je de medewerker geeft. Geef enkel toegang tot wat de taak vraagt."],
-    ["Harness", "harnas, omgeving rond het model", "De software rond het model die het laat werken: ze beheert het gesprek, de tools, bestanden, toestemmingen en het geheugen. Hetzelfde model kan in een ander harness veel meer of minder.", "De werkplek en organisatie rond de medewerker: bureau, systemen, procedures. Een sterke medewerker op een slecht uitgeruste werkplek levert minder."],
-    ["Agent en agentic", "AI-agent, agentisch werken", "Een agent is AI die zelf een plan maakt, stappen uitvoert met tools en connectors, het tussenresultaat controleert en bijstuurt tot de taak af is. Agentic beschrijft die manier van werken. Hoe agentischer, hoe minder tussenstappen je zelf ziet.", "Van \"doe deze ene taak\" naar \"regel dit\": delegeren met autonomie. Vraag om tussentijdse rapportering, want het nazicht weegt zwaarder."],
-    ["Schedule", "geplande taak, scheduled task", "De AI voert een opdracht automatisch uit op een vast moment, bv. elke maandag een overzicht van nieuwe subsidieoproepen.", "Een terugkerende opdracht met vaste deadline. Je kijkt niet meer telkens mee, dus spreek vooraf af wat er moet gebeuren bij twijfel."]
-  ];
-  const termsEl=document.getElementById('terms');
-  termsEl.innerHTML = TERMS.map(t =>
-    `<button type="button" class="flip" aria-pressed="false" aria-label="${t[0]}: toon uitleg"><span class="inner"><span class="face front"><span class="ttl">${t[0]}</span><span class="en">${t[1]}</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.66 5.66L4 15.3M4 20v-4.7h4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="face back" aria-hidden="true"><b>${t[0]}</b><span class="def">${t[2]}</span><span class="ana">${t[3]}</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.66 5.66L4 15.3M4 20v-4.7h4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></button>`).join('');
-  termsEl.querySelectorAll('.flip').forEach(c=>c.addEventListener('click',()=>{
-    const on=!c.classList.contains('flipped'); c.classList.toggle('flipped',on);
-    c.setAttribute('aria-pressed',on); c.querySelector('.back').setAttribute('aria-hidden',!on);
-  }));
-  document.getElementById('flipall').addEventListener('click',e=>{
-    const cards=[...termsEl.querySelectorAll('.flip')]; const on=!cards.every(c=>c.classList.contains('flipped'));
-    cards.forEach(c=>{c.classList.toggle('flipped',on);c.setAttribute('aria-pressed',on);c.querySelector('.back').setAttribute('aria-hidden',!on);});
-    e.currentTarget.textContent = on ? 'Draai alle kaarten terug' : 'Draai alle kaarten om';
-  });
-
-  /* ---------- generieke quiz ---------- */
-  function quiz(el, scoreEl, items){
-    let answered = 0, correct = 0;
-    el.innerHTML = items.map((it,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${it.q}</p><div class="opts">${it.o.map((o,j)=>`<button type="button" data-j="${j}">${o}</button>`).join('')}</div><span class="fb" aria-live="polite"></span></div>`).join('');
-    const upd=()=>{scoreEl.textContent = answered ? `${correct} / ${items.length}` : '';};
-    el.querySelectorAll('.q').forEach(q=>{
-      const it = items[+q.dataset.i]; let done=false;
-      q.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-        if(done) return; done=true; answered++;
-        const j=+b.dataset.j, good = it.a.includes(j);
-        if(good) correct++;
-        q.querySelectorAll('button').forEach(x=>{ if(it.a.includes(+x.dataset.j)) x.classList.add('is-ok'); });
-        if(!good) b.classList.add('is-bad');
-        const fb=q.querySelector('.fb'); fb.textContent=(good?'Juist. ':'Niet helemaal. ')+it.w; fb.className='fb '+(good?'ok':'bad');
-        upd();
-      }));
-    });
-  }
-
-  quiz(document.getElementById('q1'), document.getElementById('q1score'), [
-    {q:"Je opent een nieuwe chat en de AI weet niets meer van wat je gisteren uitlegde.", o:["Hallucinatie","Gesprek en context","Multimodaal"], a:[1], w:"Elke nieuwe chat start met een leeg dossier, tenzij geheugen of een project de info bewaart."},
-    {q:"De AI citeert een artikel uit een decreet dat niet blijkt te bestaan.", o:["Thinking mode","Agent","Hallucinatie"], a:[2], w:"Verzonnen maar overtuigend: controleer elke bron die je doorstuurt."},
-    {q:"Je vraagt de AI om eerst stap voor stap na te denken. Het antwoord duurt een minuut.", o:["Thinking mode","Contextvenster","Geheugen"], a:[0], w:"Nuttig voor analyse en rekenwerk, overbodig voor een korte mail."},
-    {q:"Je plakt het verslag van de vorige stuurgroep mee onder je vraag.", o:["Prompt","Context","Agent"], a:[1], w:"Je geeft het dossier mee. De vraag zelf is de prompt."},
-    {q:"Je stelt één keer in dat de AI altijd zakelijk en in Vlaams-Nederlands antwoordt.", o:["Vaste instructies","Webzoeken","Model"], a:[0], w:"Werkafspraken die in elk gesprek gelden."},
-    {q:"Je laadt een foto van het whiteboard op en vraagt een uitgewerkt actieplan.", o:["Hallucinatie","Multimodaal","Contextvenster"], a:[1], w:"De AI leest ook beelden. Kijk handgeschreven namen en cijfers wel na."},
-    {q:"Je plakt een AI-antwoord in Word en ziet overal ** en ## in de tekst.", o:["Hallucinatie","Markdown","Harness"], a:[1], w:"Dat zijn opmaaktekens. Vraag om tekst zonder opmaaktekens of gebruik de kopieerknop van de tool."},
-    {q:"Elke maandagochtend krijg je automatisch een overzicht van nieuwe subsidieoproepen, zonder dat je iets vraagt.", o:["Schedule","Project","Context"], a:[0], w:"Een geplande taak. Spreek af wat er gebeurt bij twijfel, want niemand kijkt mee op het moment zelf."},
-    {q:"Je koppelt je AI-tool aan je Outlook-agenda, zodat ze een vrij vergadermoment kan voorstellen.", o:["Connector","Thinking mode","Multimodaal"], a:[0], w:"Een connector geeft toegang tot een andere toepassing. Geef enkel de toegang die de taak vraagt."},
-    {q:"Je vraagt een rapport over fietsdata. De AI zoekt zelf bronnen, maakt een tabel, merkt een fout in de cijfers en past die aan voor ze je het resultaat toont.", o:["Agent en agentic","Geheugen","Prompt"], a:[0], w:"Zelf plannen, uitvoeren, controleren en bijsturen. Je ziet de tussenstappen niet, dus het nazicht op het eindresultaat weegt zwaarder."}
-  ]);
-
-})();
-</script>
 </body>
 </html>

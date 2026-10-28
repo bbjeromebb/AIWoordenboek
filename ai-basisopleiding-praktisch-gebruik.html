@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI praktisch gebruik Leiedal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: werkmap met opdrachtfiches - smalle leeskolom, sticky tabnavigatie, oefeningen als "fiches" met stippellijn-rand */
+:root{
+  --bg:#f3f6f5; --surface:#ffffff; --ink:#15201d; --muted:#55645f; --line:#d3ddd9;
+  --accent:#1d6b57; --accent-ink:#ffffff; --accent-soft:#dcebe4; --marker:#f4d35e;
+  --ok:#2c7a4b; --ok-soft:#ddf0e3; --bad:#b3261e; --bad-soft:#f9e0de;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1614; --surface:#17211e; --ink:#e4ede9; --muted:#9bada6; --line:#2b3a35;
+  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420;
+  --ok:#72d19a; --ok-soft:#173826; --bad:#f28b82; --bad-soft:#3d1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1614; --surface:#17211e; --ink:#e4ede9; --muted:#9bada6; --line:#2b3a35;
+  --accent:#5fc4a3; --accent-ink:#08231b; --accent-soft:#1b3830; --marker:#8a7420;
+  --ok:#72d19a; --ok-soft:#173826; --bad:#f28b82; --bad-soft:#3d1c1a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body)}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700}
+h2{font-size:1.75rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.lead{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.eyebrow{font:500 .75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+mark{background:var(--marker);color:inherit;padding:0 .15em}
+code,.mono{font-family:var(--f-mono);font-size:.9em}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* nav */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-size:.9rem;padding:6px 10px;border-radius:999px;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink);background:var(--accent-soft)}
+
+header.hero{padding-block:48px 32px}
+header.hero .wrap{display:grid;gap:16px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.rule{border-left:3px solid var(--accent);padding:4px 0 4px 12px}
+.rule b{display:block;font-family:var(--f-display);font-size:1.05rem}
+.rule span{color:var(--muted);font-size:.95rem}
+
+section{padding-block:40px;border-top:1px solid var(--line)}
+section > .wrap{display:grid;gap:18px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.two > *{min-width:0}
+
+/* timeline */
+.timeline{display:grid;gap:0;border-left:2px solid var(--line);margin-left:6px}
+.tl{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:10px 0 10px 16px;position:relative}
+.tl::before{content:"";position:absolute;left:-7px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.tl .t{font:500 .85rem var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums;padding-top:2px}
+.tl .d b{display:block}
+.tl .d span{color:var(--muted);font-size:.93rem}
+.tag{display:inline-block;font:500 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-left:6px;vertical-align:2px}
+
+/* table */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .75rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+
+.note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.note h3{margin-bottom:6px}
+.note ul{margin:6px 0 0;padding-left:20px}
+.warn{border-color:var(--bad);background:var(--bad-soft)}
+
+/* woordenschat */
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+.flip{all:unset;box-sizing:border-box;display:grid;cursor:pointer;perspective:900px;border-radius:var(--r);min-width:0}
+.flip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.flip .inner{display:grid;height:100%;transition:transform .5s ease;transform-style:preserve-3d;min-height:200px}
+.flip .face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);border:1px solid var(--line);padding:14px;display:grid;gap:6px}
+.flip .front{background:var(--surface);align-content:center;justify-items:center;text-align:center}
+.flip .front .ttl{font:700 1.25rem/1.15 var(--f-display);text-wrap:balance}
+.flip .front .en{font:400 .8rem var(--f-mono);color:var(--muted)}
+.flip .face{position:relative}
+.flip .ico{position:absolute;right:10px;bottom:10px;width:16px;height:16px;color:var(--muted);opacity:.55;transition:opacity .2s,color .2s}
+.flip:hover .ico,.flip:focus-visible .ico{opacity:1;color:var(--accent)}
+.flip .back{padding-bottom:30px}
+.flip .back{background:var(--accent-soft);transform:rotateY(180deg);align-content:start}
+.flip .back b{font-family:var(--f-display);font-size:1rem}
+.flip .back .def{font-size:.85rem;line-height:1.5}
+.flip .back .ana{font-size:.82rem;line-height:1.5;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.flip .back .ana::before{content:"Delegeren: ";font-weight:600;color:var(--accent)}
+.flip.flipped .inner{transform:rotateY(180deg)}
+@media (hover:hover){.flip:hover .front{border-color:var(--accent)}}
+@media (prefers-reduced-motion: reduce){
+  .flip .inner{transition:none}
+}
+
+/* fiche (oefening) */
+.fiche{border:2px dashed var(--accent);border-radius:14px;padding:18px;background:var(--surface);display:grid;gap:14px}
+.fiche > header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px}
+.fiche .dur{font:500 .8rem var(--f-mono);color:var(--muted)}
+.q{display:grid;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.q p{font-weight:500}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+button,.btn{font:500 .9rem var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.is-ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+button.is-bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.fb{font-size:.92rem;color:var(--muted)}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+.score{font:500 .9rem var(--f-mono)}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.tool{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:8px;align-content:start}
+.tool .kind{font:500 .72rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tool dl{margin:0;display:grid;gap:4px;font-size:.92rem}
+.tool dt{font-weight:600}
+.tool dd{margin:0 0 4px;color:var(--muted)}
+.pill{display:inline-block;font:500 .72rem var(--f-mono);padding:2px 8px;border-radius:999px}
+.pill.green{background:var(--ok-soft);color:var(--ok)}
+.pill.red{background:var(--bad-soft);color:var(--bad)}
+
+/* builder */
+.builder{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.builder > *{min-width:0}
+.field{display:grid;gap:4px}
+.field label{font-weight:600;font-size:.92rem}
+.field small{color:var(--muted);font-size:.82rem}
+textarea,input[type=text]{width:100%;font:400 .93rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+.out{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font:400 .88rem/1.55 var(--f-mono);white-space:pre-wrap;word-break:break-word;min-height:200px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.compare > div{min-width:0;border-radius:var(--r);padding:12px;border:1px solid var(--line);background:var(--surface)}
+.compare .weak{border-color:var(--bad)}
+.compare .strong{border-color:var(--ok)}
+.compare pre{margin:6px 0 0;white-space:pre-wrap;font:400 .86rem/1.5 var(--f-mono)}
+
+/* spot de fout */
+.source{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:.93rem}
+.sents{display:grid;gap:6px}
+.sent{text-align:left;width:100%;background:var(--bg);font-weight:400;line-height:1.45}
+.sent.sel{border-color:var(--marker);box-shadow:inset 4px 0 0 var(--marker)}
+.sent.ok-right{background:var(--ok-soft);border-color:var(--ok)}
+.sent.bad-right{background:var(--bad-soft);border-color:var(--bad)}
+.sent .why{display:block;font-size:.85rem;color:var(--muted);margin-top:4px}
+
+.checklist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.checklist input{margin-top:5px;accent-color:var(--accent)}
+
+details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
+details + details{margin-top:8px}
+summary{cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+details[open] summary{margin-bottom:10px}
+details ul,details ol{padding-left:20px;margin:6px 0}
+details li{margin-bottom:4px}
+/* matrix */
+.matrix{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto auto auto;gap:6px}
+.matrix .ax{font:500 .72rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.matrix .ax-y{grid-row:1/3;grid-column:1;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
+.matrix .ax-x{grid-column:2/4;text-align:center}
+.matrix .cell{border-radius:var(--r);padding:12px;display:grid;gap:2px;min-width:0;border:1px solid var(--line)}
+.matrix .cell b{font-family:var(--f-display)}
+.matrix .cell span{font-size:.82rem;color:var(--muted)}
+.c-a{background:var(--ok-soft)} .c-b{background:var(--accent-soft)} .c-c{background:var(--surface)} .c-d{background:var(--bad-soft)}
+.sortitem{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.sortitem:first-child{border-top:0}
+.steps{margin:0;padding-left:20px;display:grid;gap:10px}
+.prompt{display:grid;gap:6px;margin-top:6px}
+.prompt pre{margin:0;white-space:pre-wrap;word-break:break-word;font:400 .86rem/1.5 var(--f-mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+.prompt button{justify-self:start}
+.trap{font-size:.93rem;border-left:3px solid var(--marker);padding-left:10px}
+#notes{white-space:pre-wrap}
+.reacties{margin:0;padding-left:24px;display:grid;gap:4px;font-size:.93rem}
+footer{padding-block:32px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+html{scroll-behavior:smooth}
+section{scroll-margin-top:56px}
+</style>
+<style>:root{color-scheme:light} body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">AI basisopleiding Leiedal · sessie 1 </span>
+    <h1>Praktisch gebruik: <mark>samenwerken met AI</mark></h1>
+    <p class="lead">Bepaal je welke taken je aan AI doorgeeft en hoe streng je het resultaat nakijkt.</p>
+  </div>
+</header>
+
+<!-- WELKE TAKEN -->
+<section id="welketaken" style="border-top:0">
+  <div class="wrap">
+    
+    <h2>Welke taken geef je door?</h2>
+    <p class="lead">Een goede leidinggevende delegeert niet alles op dezelfde manier. Twee vragen bepalen hoe je een taak aan AI geeft: hoe erg is een fout, en hoe makkelijk zie je die fout?</p>
+    <div class="matrix" role="img" aria-label="Delegeermatrix met vier kwadranten">
+      <div class="ax ax-y">Impact bij een fout</div>
+      <div class="cell c-b"><b>Delegeer, kijk grondig na</b><span>hoog · makkelijk na te kijken</span></div>
+      <div class="cell c-d"><b>Niet delegeren, hooguit sparren</b><span>hoog · moeilijk na te kijken</span></div>
+      <div class="cell c-a"><b>Delegeer gerust</b><span>laag · makkelijk na te kijken</span></div>
+      <div class="cell c-c"><b>Gebruik als inspiratie</b><span>laag · moeilijk na te kijken</span></div>
+      <div class="ax ax-x">Hoe makkelijk kijk je het resultaat na? &nbsp;makkelijk → moeilijk</div>
+    </div>
+    <div class="fiche">
+      <header><h3>Sorteer de taken</h3><span class="dur">in duo · 5 min</span></header>
+      <p class="fb">Er is niet altijd één juist antwoord. Het voorstel dient om het gesprek te voeren.</p>
+      <div id="sorter"></div>
+    </div>
+  </div>
+</section>
+
+
+<footer><div class="wrap">AI basisopleiding Leiedal · praktisch gebruik ·  2026. sessie 1</a>.</div></footer>
+
+<script>
+(function(){
+  /* ---------- delegeermatrix ---------- */
+  const Q = ["Delegeer gerust","Delegeer, kijk grondig na","Gebruik als inspiratie","Niet delegeren, hooguit sparren"];
+  const TASKS = [
+    {t:"Eerste versie van een uitnodigingsmail voor een werkgroep", a:0, w:"Een fout zie je meteen en de schade is klein."},
+    {t:"Een publiek rapport van 80 bladzijden samenvatten voor een collega", a:1, w:"Nuttig, maar een weglating of verdraaiing heeft gevolgen. Vraag bronverwijzingen en controleer steekproefsgewijs."},
+    {t:"Titels bedenken voor een workshop", a:0, w:"Je beoordeelt het resultaat in één oogopslag."},
+    {t:"Cijfers uit tabellen optellen voor een subsidiedossier", a:1, w:"Hoge impact. Controleerbaar, maar alleen als je zelf narekent, liefst met een rekenblad."},
+    {t:"Inschatten hoe bewoners op een plan zullen reageren", a:2, w:"Er bestaat geen juist antwoord om mee te vergelijken. Gebruik het om je eigen denken te verbreden, niet als voorspelling."},
+    {t:"Juridische toets of een project vergunbaar is", a:3, w:"Hoge impact, en een fout zie je enkel met vakkennis. AI kan hooguit vragen of aandachtspunten aanreiken."},
+    {t:"Budgetadvies aan de raad van bestuur", a:3, w:"Jij draagt de verantwoordelijkheid. AI kan de structuur of tegenargumenten helpen zoeken, niet het advies zelf leveren."}
+  ];
+  const sorter=document.getElementById('sorter');
+  sorter.innerHTML = TASKS.map((t,i)=>`<div class="sortitem" data-i="${i}"><p><b>${t.t}</b></p><div class="opts">${Q.map((q,j)=>`<button type="button" data-j="${j}">${q}</button>`).join('')}</div><span class="fb" aria-live="polite"></span></div>`).join('');
+  sorter.querySelectorAll('.sortitem').forEach(el=>{
+    const t=TASKS[+el.dataset.i];
+    el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      el.querySelectorAll('button').forEach(x=>x.classList.remove('is-ok','is-bad'));
+      const j=+b.dataset.j;
+      el.querySelector(`button[data-j="${t.a}"]`).classList.add('is-ok');
+      if(j!==t.a) b.classList.add('is-bad');
+      const fb=el.querySelector('.fb');
+      fb.textContent=(j===t.a?'Zelfde als het voorstel. ':'Voorstel: '+Q[t.a]+'. ')+t.w;
+    }));
+  });
+
+  /* ---------- kopieerknoppen ---------- */
+  function copyText(txt, node, fb){
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(node);const s=getSelection();s.removeAllRanges();s.addRange(r);fb('Tekst geselecteerd: druk Ctrl+C.');};
+    try{ navigator.clipboard.writeText(txt).then(()=>fb('Gekopieerd.'),sel); }catch(e){ sel(); }
+  }
+  document.querySelectorAll('.copyp').forEach(b=>b.addEventListener('click',()=>{
+    const pre=document.getElementById(b.dataset.t);
+    copyText(pre.textContent, pre, m=>{ b.textContent = m==='Gekopieerd.'?'Gekopieerd':'Kopieer'; if(m!=='Gekopieerd.') b.title=m; setTimeout(()=>b.textContent='Kopieer',1800); });
+  }));
+  document.getElementById('copyreacties').addEventListener('click',()=>{
+    const ol=document.getElementById('reacties');
+    const txt=[...ol.querySelectorAll('li')].map((li,i)=>(i+1)+'. '+li.textContent).join('\n');
+    copyText(txt, ol, m=>document.getElementById('copyreactiesfb').textContent=m);
+  });
+})();
+</script>
+</body>
+</html>
